@@ -2,6 +2,7 @@ package com.example.scrap_chef.service;
 
 import com.example.scrap_chef.domain.Ingredient;
 import com.example.scrap_chef.domain.IngredientUpdateDto;
+import com.example.scrap_chef.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,35 +17,29 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 public class IngredientService {
 
-    private final List<Ingredient> ingredients = new ArrayList<>();
-    private AtomicLong idCounter = new AtomicLong(1); // ID 자동 증가
-
+    private final IngredientRepository ingredientRepository;
 
     public List<Ingredient> getIngredients() {
-        return new ArrayList<>(ingredients);
+        return ingredientRepository.findAll();
     }
 
     public Ingredient createIngredient(String title) {
-        boolean isDuplicate = ingredients.stream().anyMatch(ingredient -> ingredient.getTitle().equals(title));
+        boolean isDuplicate = ingredientRepository.existsByTitle(title);
         if (isDuplicate) {
             throw new IllegalArgumentException("중복된 재료입니다.");
         }
 
         Ingredient newIngredient = Ingredient.builder()
-                .id(idCounter.getAndIncrement())
                 .title(title)
                 .createdAt(LocalDateTime.now().toString())
                 .build();
-        ingredients.add(newIngredient);
+        ingredientRepository.save(newIngredient);
 
         return newIngredient;
     }
 
     public Ingredient updateIngredient(Long id, IngredientUpdateDto ingredientUpdateDto) {
-        Ingredient targetIngredient = ingredients.stream()
-                .filter(ingredient -> ingredient.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
+        Ingredient targetIngredient = ingredientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
 
         targetIngredient.setTitle(ingredientUpdateDto.getTitle());
 
@@ -52,6 +47,6 @@ public class IngredientService {
     }
 
     public void deleteIngredient(Long id) {
-        ingredients.removeIf(ingredient -> ingredient.getId().equals(id));
+        ingredientRepository.deleteById(id);
     }
 }
