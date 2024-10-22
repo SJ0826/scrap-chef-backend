@@ -4,11 +4,9 @@ import com.example.scrap_chef.domain.RecipeResponseDto;
 import com.example.scrap_chef.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -21,7 +19,7 @@ public class RecipeController {
     // 레시피 목록 조회
 
     @GetMapping
-    public RecipeResponseDto getRecipesData() {
+    public Mono<RecipeResponseDto> getRecipesData() {
         return recipeService.getRecipes();
     }
 }

@@ -7,10 +7,10 @@ import lombok.Setter;
 
 import java.util.List;
 
-public class RecipeResponseDto {
+public class RecipeOpenApiResponseDto {
     @Setter(onMethod = @__(@JsonSetter(value = "COOKRCP01")))
     @Getter(onMethod = @__(@JsonGetter(value = "recipes")))
-    private CookRcp01 recipes;
+    private RecipeOpenApiResponseDto.CookRcp01 recipes;
 
     public static class CookRcp01 {
         @Setter(onMethod = @__(@JsonSetter(value = "total_count")))
@@ -19,11 +19,11 @@ public class RecipeResponseDto {
 
         @Setter(onMethod = @__(@JsonSetter(value = "row")))
         @Getter(onMethod = @__(@JsonGetter(value = "recipe")))
-        private List<RecipeDto> recipe;
+        private List<RecipeOpenApiDto> recipe;
 
         @Setter(onMethod = @__(@JsonSetter(value = "RESULT")))
         @Getter(onMethod = @__(@JsonGetter(value = "result")))
-        private Result result;
+        private RecipeResponseDto.CookRcp01.Result result;
 
         public static class Result {
             @Setter(onMethod = @__(@JsonSetter(value = "MSG")))
@@ -34,6 +34,7 @@ public class RecipeResponseDto {
             @Getter(onMethod = @__(@JsonGetter(value = "code")))
             private String code;
         }
+
+
     }
 }
-
