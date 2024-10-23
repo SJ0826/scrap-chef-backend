@@ -1,10 +1,8 @@
 package com.example.scrap_chef.service;
 
 import com.example.scrap_chef.domain.RecipeDto;
-import com.example.scrap_chef.domain.RecipeOpenApiDto;
 import com.example.scrap_chef.domain.RecipeOpenApiResponseDto;
 import com.example.scrap_chef.domain.RecipeResponseDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

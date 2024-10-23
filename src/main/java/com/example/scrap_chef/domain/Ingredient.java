@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor // 기본 생성자 추가
+@NoArgsConstructor // JPA를 위한 기본 생성자
 @Table(name = "ingredient")
 public class Ingredient {
 
@@ -23,11 +25,16 @@ public class Ingredient {
     private String title;
 
     @Column(name = "createdAt")
-    private String createdAt;
+    private LocalDateTime createdAt;
 
-    @Builder
-    public Ingredient(Long id, String title, String createdAt) {
-        this.id = id;
+    // 생성날짜 자동설정
+    // 엔티티가 저장되기 전에 호출된다
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Ingredient(Long id, String title, LocalDateTime createdAt) { // 빌더 패턴 사용을 위한 생성자
         this.title = title;
         this.createdAt = createdAt;
     }
