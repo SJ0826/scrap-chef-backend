@@ -24,7 +24,7 @@ public class RecipeService {
 
     private static final String API_KEY = "1c2f5f6d21da479da907";
     private static final String REQUEST_HOST = "openapi.foodsafetykorea.go.kr";
-    private static final String REQUEST_PATH = "/api/{API_KEY}/{SERVICE}/{TYPE}/{START_INDEX}/{END_INDEX}";
+    private static final String REQUEST_PATH = "/api/{API_KEY}/{SERVICE}/{TYPE}/{START_INDEX}/{END_INDEX}/";
     private static final String TYPE = "json";
     private static final String SERVICE = "COOKRCP01";
     private static final int START_INDEX = 0;
@@ -34,14 +34,34 @@ public class RecipeService {
     @Autowired
     private final WebClient webClient;
 
-    public Mono<RecipeResponseDto> getRecipes() {
+    public Mono<RecipeResponseDto> getRecipes(List<String> ingredients) {
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host(REQUEST_HOST)
+                .path(REQUEST_PATH)
+                .build(API_KEY, SERVICE, TYPE, START_INDEX, END_INDEX));
+
+        // 기본 경로 설정
+        StringBuilder pathBuilder = new StringBuilder();
+
+        // 경로에 파라미터를 동적으로 추가
+        for (String ingredient : ingredients) {
+            if (pathBuilder.length() > 0) {
+                pathBuilder.append("&"); // 이전 파라미터와 구분하기 위해 & 추가
+            }
+            pathBuilder.append("RCP_PARTS_DTLS=").append(ingredient);
+        }
+
+        // 최종 경로 설정
+        String fullPath = pathBuilder.toString();
+        uriComponentsBuilder.path(fullPath);
+
+        // 최종 URI 확인용 출력
+        System.out.println(uriComponentsBuilder.build().toUri());
+
+        System.out.println(uriComponentsBuilder.build().toUri());
         return webClient.get()
-                .uri(UriComponentsBuilder.newInstance()
-                        .scheme("http")
-                        .host(REQUEST_HOST)
-                        .path(REQUEST_PATH)
-                        .build(API_KEY, SERVICE, TYPE, START_INDEX, END_INDEX)
-                )
+                .uri(uriComponentsBuilder.build().toUri())
                 .retrieve() // 요청을 수행하고 응답을 가져옴
                 .bodyToMono(RecipeOpenApiResponseDto.class) // json응답이 DTO객체로 역직렬화
                 .map(openApiResponse -> {

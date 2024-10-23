@@ -15,7 +15,7 @@ public class RecipeDto {
     private String imageUrl;
 
     @Setter(onMethod = @__(@JsonSetter(value = "RCP_NM")))
-    @Getter(onMethod = @__(@JsonGetter(value = "recipeName")))
+    @Getter(onMethod = @__(@JsonGetter(value = "name")))
     private String recipeName;
 
     @Setter(onMethod = @__(@JsonSetter(value = "RCP_PARTS_DTLS")))

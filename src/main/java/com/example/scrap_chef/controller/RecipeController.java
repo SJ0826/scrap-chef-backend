@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,7 +22,7 @@ public class RecipeController {
     // 레시피 목록 조회
 
     @GetMapping
-    public Mono<RecipeResponseDto> getRecipesData() {
-        return recipeService.getRecipes();
+    public Mono<RecipeResponseDto> getRecipesData(@RequestParam List<String> ingredients) {
+        return recipeService.getRecipes(ingredients);
     }
 }
