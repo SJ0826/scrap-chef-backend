@@ -65,7 +65,7 @@ public class RecipeService {
         }
         String fullPath = pathBuilder.toString();
         uriBuilder.path(fullPath);
-        
+
         return uriBuilder.toUriString();
     }
 
@@ -143,102 +143,4 @@ public class RecipeService {
         recipeDto.setManualSteps(manualStepList.toArray(new RecipeDto.ManualStepDto[0]));
         return recipeDto;
     }
-//
-//                            recipeList.add(recipeDto);    }
-
-//    public Mono<RecipeResponseDto> getRecipes(List<String> ingredients) {
-//        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(UriComponentsBuilder.newInstance()
-//                .scheme("http")
-//                .host(REQUEST_HOST)
-//                .path(REQUEST_PATH)
-//                .build(API_KEY, SERVICE, TYPE, START_INDEX, END_INDEX));
-//
-//        // 기본 경로 설정
-//        StringBuilder pathBuilder = new StringBuilder();
-//
-//        // 경로에 파라미터를 동적으로 추가
-//        for (String ingredient : ingredients) {
-//            if (pathBuilder.length() > 0) {
-//                pathBuilder.append("&"); // 이전 파라미터와 구분하기 위해 & 추가
-//            }
-//            pathBuilder.append("RCP_PARTS_DTLS=").append(ingredient);
-//        }
-//
-//        // 최종 경로 설정
-//        String fullPath = pathBuilder.toString();
-//        uriComponentsBuilder.path(fullPath);
-//
-//
-//        return webClient.get()
-//                .uri(uriComponentsBuilder.build().toUri())
-//                .retrieve() // 요청을 수행하고 응답을 가져옴
-//                .bodyToMono(RecipeOpenApiResponseDto.class) // json응답이 DTO객체로 역직렬화
-//                .map(openApiResponse -> {
-//                    // RecipeResponseDto로 변환
-//                    RecipeResponseDto recipeResponseDto = new RecipeResponseDto();
-//                    RecipeOpenApiResponseDto.CookRcp01 openApiCookRcp = openApiResponse.getRecipes();
-//                    RecipeResponseDto.CookRcp01 responseCookRcp = new RecipeResponseDto.CookRcp01();
-//
-//                    // totalCount 복사
-//                    responseCookRcp.setTotalCount(openApiCookRcp.getTotalCount());
-//
-//                    // 각 레시피를 변환하여 저장
-//                    if (openApiCookRcp.getRecipe() != null) {
-//                        List<RecipeDto> recipeList = new ArrayList<>();
-//                        openApiCookRcp.getRecipe().forEach(openApiRecipeDto -> {
-//                            RecipeDto recipeDto = new RecipeDto();
-//                            recipeDto.setId(openApiRecipeDto.getId());
-//                            recipeDto.setImageUrl(openApiRecipeDto.getImageUrl());
-//                            recipeDto.setRecipeName(openApiRecipeDto.getRecipeName());
-//
-//                            // 재료 문자열을 배열로 변환하여 저장
-//                            String ingredientsString = openApiRecipeDto.getIngredients();
-//                            if (ingredientsString != null) {
-//                                List<String> ingredientsArray = List.of(ingredientsString.split("(\\n|\\s*,\\s*)"));
-//                                recipeDto.setIngredients(ingredientsArray);
-//                            }
-//
-//                            // 만드는 순서와 이미지 처리
-//                            List<RecipeDto.ManualStepDto> manualStepList = new ArrayList<>();
-//                            for (int i = 1; i <= 20; i++) {
-//                                String stepField = "MANUAL" + String.format("%02d", i); // MANUAL01, MANUAL02, ...
-//                                String stepImgField = "MANUAL_IMG" + String.format("%02d", i); // MANUAL_IMG01, MANUAL_IMG02, ...
-//
-//                                try {
-//                                    // 필드에 접근하기 위해 리플렉션을 사용
-//                                    Field step = openApiRecipeDto.getClass().getDeclaredField(stepField);
-//                                    Field img = openApiRecipeDto.getClass().getDeclaredField(stepImgField);
-//
-//                                    // 필드 접근 허용
-//                                    step.setAccessible(true);
-//                                    img.setAccessible(true);
-//
-//                                    // 필드 값 가져오기
-//                                    String manual = (String) step.get(openApiRecipeDto);
-//                                    String manualImg = (String) img.get(openApiRecipeDto);
-//
-//                                    // null 체크 후 리스트에 추가
-//                                    if (!Objects.equals(manual, "")) {
-//                                        manualStepList.add(new RecipeDto.ManualStepDto(manual, manualImg));
-//                                        System.out.println(new RecipeDto.ManualStepDto(manual, manualImg));
-//                                    }
-//
-//                                } catch (NoSuchFieldException | IllegalAccessException e) {
-//                                    log.error("Error accessing fields for RecipeDto: {}", e.getMessage());
-//                                }
-//                            }
-//                            log.info("Manual Step List: {}", manualStepList);
-//                            // 수집한 제조 단계를 RecipeDto에 설정
-//                            recipeDto.setManualSteps(manualStepList.toArray(new RecipeDto.ManualStepDto[0]));
-//
-//                            recipeList.add(recipeDto);
-//                        });
-//                        responseCookRcp.setRecipe(recipeList);
-//                    }
-//
-//                    // 변환된 CookRcp01 객체를 RecipeResponseDto에 설정
-//                    recipeResponseDto.setRecipes(responseCookRcp);
-//                    return recipeResponseDto;
-//                });
-//    }
 }
