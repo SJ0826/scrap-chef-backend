@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 public class RecipeDto {
     @Setter(onMethod = @__(@JsonSetter(value = "RCP_SEQ")))
     @Getter(onMethod = @__(@JsonGetter(value = "id")))
@@ -20,7 +22,7 @@ public class RecipeDto {
 
     @Setter(onMethod = @__(@JsonSetter(value = "RCP_PARTS_DTLS")))
     @Getter(onMethod = @__(@JsonGetter(value = "ingredients")))
-    private String[] ingredients;
+    private List<String> ingredients;
 
     @Getter
     @Setter
@@ -41,8 +43,8 @@ public class RecipeDto {
         @Override
         public String toString() {
             return "ManualStepDto{" +
-                    "manual='" + step + '\'' +
-                    ", manualImg='" + imageUrl + '\'' +
+                    "step='" + step + '\'' +
+                    ", stepImg='" + imageUrl + '\'' +
                     '}';
         }
     }

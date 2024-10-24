@@ -8,8 +8,8 @@ import lombok.Setter;
 import java.util.List;
 
 public class RecipeResponseDto {
-    @Setter(onMethod = @__(@JsonSetter(value = "COOKRCP01")))
-    @Getter(onMethod = @__(@JsonGetter(value = "recipes")))
+    @Setter(onMethod = @__(@JsonSetter(value = "COOKRCP01"))) // json 데이터가 객체로 변환될때 해당 필드의 키의 값을 반환
+    @Getter(onMethod = @__(@JsonGetter(value = "recipes"))) // 객체가 json으로 직렬화될 때 해당 필드의 키로 변환
     private CookRcp01 recipes;
 
     public static class CookRcp01 {
@@ -20,20 +20,6 @@ public class RecipeResponseDto {
         @Setter(onMethod = @__(@JsonSetter(value = "row")))
         @Getter(onMethod = @__(@JsonGetter(value = "recipe")))
         private List<RecipeDto> recipe;
-
-        @Setter(onMethod = @__(@JsonSetter(value = "RESULT")))
-        @Getter(onMethod = @__(@JsonGetter(value = "result")))
-        private Result result;
-
-        public static class Result {
-            @Setter(onMethod = @__(@JsonSetter(value = "MSG")))
-            @Getter(onMethod = @__(@JsonGetter(value = "message")))
-            private String message;
-
-            @Setter(onMethod = @__(@JsonSetter(value = "CODE")))
-            @Getter(onMethod = @__(@JsonGetter(value = "code")))
-            private String code;
-        }
     }
 }
 

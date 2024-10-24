@@ -1,6 +1,7 @@
 package com.example.scrap_chef.controller;
 
 import com.example.scrap_chef.domain.RecipeResponseDto;
+import com.example.scrap_chef.dto.ApiResponse;
 import com.example.scrap_chef.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,8 @@ public class RecipeController {
     // 레시피 목록 조회
 
     @GetMapping
-    public Mono<RecipeResponseDto> getRecipesData(@RequestParam List<String> ingredients) {
+    public Mono<ApiResponse<RecipeResponseDto>> getRecipesData(@RequestParam List<String> ingredients) {
         return recipeService.getRecipes(ingredients);
+
     }
 }
