@@ -57,14 +57,15 @@ public class RecipeService {
 
         StringBuilder pathBuilder = new StringBuilder();
 
+        // 재료 리스트를 경로에 추가
         for (String ingredient : ingredients) {
             if (!pathBuilder.isEmpty()) {
-                pathBuilder.append("&"); // 이전 파라미터와 구분하기 위해 & 추가
+                pathBuilder.append(",");
             }
-            pathBuilder.append("RCP_PARTS_DTLS=").append(ingredient);
+            pathBuilder.append(ingredient);
         }
-        String fullPath = pathBuilder.toString();
-        uriBuilder.path(fullPath);
+
+        uriBuilder.path("/RCP_PARTS_DTLS=").path(pathBuilder.toString());
 
         return uriBuilder.toUriString();
     }
