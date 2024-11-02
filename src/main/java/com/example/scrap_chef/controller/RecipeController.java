@@ -23,8 +23,8 @@ public class RecipeController {
     // 레시피 목록 조회
 
     @GetMapping
-    public Mono<ApiResponse<RecipeResponseDto>> getRecipesData(@RequestParam List<String> ingredients) {
-        return recipeService.getRecipes(ingredients);
+    public Mono<ApiResponse<RecipeResponseDto>> getRecipesData(@RequestParam(required = false) List<String> ingredients, @RequestParam(defaultValue = "1") int page) {
+        return recipeService.getRecipes(ingredients, page);
 
     }
 }

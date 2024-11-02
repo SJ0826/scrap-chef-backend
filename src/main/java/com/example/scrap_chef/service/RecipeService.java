@@ -27,14 +27,17 @@ public class RecipeService {
     private static final String REQUEST_PATH = "/api/{API_KEY}/{SERVICE}/{TYPE}/{START_INDEX}/{END_INDEX}/";
     private static final String TYPE = "json";
     private static final String SERVICE = "COOKRCP01";
-    private static final int START_INDEX = 0;
-    private static final int END_INDEX = 5;
+
 
     @Autowired
     private final WebClient webClient;
 
-    public Mono<ApiResponse<RecipeResponseDto>> getRecipes(List<String> ingredients) {
-        String uri = buildUri(ingredients);
+    public Mono<ApiResponse<RecipeResponseDto>> getRecipes(List<String> ingredients, int page) {
+        int pageSize = 6;
+        int startIndex = (page - 1) * pageSize + 1;
+        int endIndex = (page) * pageSize;
+
+        String uri = buildUri(ingredients, startIndex, endIndex);
         System.out.println(uri);
         return webClient.get()
                 .uri(uri)
@@ -48,24 +51,27 @@ public class RecipeService {
     /**
      * URI 빌더 로직을 별도의 메서드로 분리
      **/
-    private String buildUri(List<String> ingredients) {
+    private String buildUri(List<String> ingredients, int startIndex, int endIndex) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(UriComponentsBuilder.newInstance()
                 .scheme("http")
                 .host(REQUEST_HOST)
                 .path(REQUEST_PATH)
-                .build(API_KEY, SERVICE, TYPE, START_INDEX, END_INDEX));
+                .build(API_KEY, SERVICE, TYPE, startIndex, endIndex));
 
         StringBuilder pathBuilder = new StringBuilder();
 
         // 재료 리스트를 경로에 추가
-        for (String ingredient : ingredients) {
-            if (!pathBuilder.isEmpty()) {
-                pathBuilder.append(",");
+        if (ingredients != null && !ingredients.isEmpty()) {
+            for (String ingredient : ingredients) {
+                if (!pathBuilder.isEmpty()) {
+                    pathBuilder.append(",");
+                }
+                pathBuilder.append(ingredient);
             }
-            pathBuilder.append(ingredient);
-        }
 
-        uriBuilder.path("/RCP_PARTS_DTLS=").path(pathBuilder.toString());
+            uriBuilder.path("/RCP_PARTS_DTLS=").path(pathBuilder.toString());
+
+        }
 
         return uriBuilder.toUriString();
     }
@@ -132,7 +138,13 @@ public class RecipeService {
 
                 // null 체크 후 리스트에 추가
                 if (!Objects.equals(manual, "")) {
-                    manualStepList.add(new RecipeDto.ManualStepDto(manual, manualImg));
+                    // "●" 문자를 제거
+                    String cleanedManual = manual.replace("●", "").trim();
+
+                    if (!cleanedManual.isEmpty()) {
+                        manualStepList.add(new RecipeDto.ManualStepDto(cleanedManual, manualImg));
+                    }
+
                 }
 
             } catch (NoSuchFieldException | IllegalAccessException e) {
