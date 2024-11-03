@@ -24,6 +24,7 @@ public class RecipeController {
 
     @GetMapping
     public Mono<ApiResponse<RecipeResponseDto>> getRecipesData(@RequestParam(required = false) List<String> ingredients, @RequestParam(defaultValue = "1") int page) {
+        System.out.println("check");
         return recipeService.getRecipes(ingredients, page);
 
     }
