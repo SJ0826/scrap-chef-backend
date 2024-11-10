@@ -1,9 +1,9 @@
 package com.example.scrap_chef.service;
 
-import com.example.scrap_chef.domain.RecipeDto;
-import com.example.scrap_chef.domain.RecipeOpenApiDto;
-import com.example.scrap_chef.domain.RecipeOpenApiResponseDto;
-import com.example.scrap_chef.domain.RecipeResponseDto;
+import com.example.scrap_chef.domain.recipe.RecipeDto;
+import com.example.scrap_chef.domain.recipe.RecipeOpenApiDto;
+import com.example.scrap_chef.domain.recipe.RecipeOpenApiResponseDto;
+import com.example.scrap_chef.domain.recipe.RecipeResponseDto;
 import com.example.scrap_chef.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

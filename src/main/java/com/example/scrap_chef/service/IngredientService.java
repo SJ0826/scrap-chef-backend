@@ -1,7 +1,7 @@
 package com.example.scrap_chef.service;
 
-import com.example.scrap_chef.domain.Ingredient;
-import com.example.scrap_chef.domain.IngredientUpdateDto;
+import com.example.scrap_chef.domain.ingredient.Ingredient;
+import com.example.scrap_chef.domain.ingredient.IngredientUpdateDto;
 import com.example.scrap_chef.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @Service

@@ -1,4 +1,4 @@
-package com.example.scrap_chef.domain;
+package com.example.scrap_chef.domain.recipe;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;

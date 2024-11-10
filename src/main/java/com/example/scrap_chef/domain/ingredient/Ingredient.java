@@ -1,4 +1,4 @@
-package com.example.scrap_chef.domain;
+package com.example.scrap_chef.domain.ingredient;
 
 import jakarta.persistence.*;
 import lombok.Builder;

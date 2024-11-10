@@ -39,6 +39,13 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
     /* Database dependency */
+
+    /* Security dependency */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    /* Security dependency */
+    
+
+    /* Websocket dependency */
 }
 
 tasks.named('test') {

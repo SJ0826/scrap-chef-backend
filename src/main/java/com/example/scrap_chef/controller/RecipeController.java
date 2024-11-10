@@ -1,6 +1,6 @@
 package com.example.scrap_chef.controller;
 
-import com.example.scrap_chef.domain.RecipeResponseDto;
+import com.example.scrap_chef.domain.recipe.RecipeResponseDto;
 import com.example.scrap_chef.dto.ApiResponse;
 import com.example.scrap_chef.service.RecipeService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,6 @@ public class RecipeController {
 
     @GetMapping
     public Mono<ApiResponse<RecipeResponseDto>> getRecipesData(@RequestParam(required = false) List<String> ingredients, @RequestParam(defaultValue = "1") int page) {
-        System.out.println("check");
         return recipeService.getRecipes(ingredients, page);
-
     }
 }
