@@ -2,8 +2,8 @@ package com.example.scrap_chef.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -11,31 +11,52 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-    private String secretKey = System.getenv("JWT_SECRET_KEY");
-    private long expirationTime = 86400000; // 24 hours
+    private String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+    private final long ACCESS_TOKEN_EXPIRATION_TIME = 86400000L; // 1일 (24시간)
+    private final long REFRESH_TOKEN_EXPIRATION_TIME = 2592000000L; // 30일 (30일)
 
-    // JWT 생성
-    public String generateToken(String username) {
+    // Access Token 생성
+    public String generateAccessToken(Authentication authentication) {
+        String username = authentication.getName();
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
+
         return Jwts.builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SignatureAlgorithm.HS384, secretKey) // JWT 토큰을 서명하는 방법을 설정
-                .compact(); // 토큰 생성
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
     }
+
+    // Refresh Token 생성
+    public String generateRefreshToken(Authentication authentication) {
+        String username = authentication.getName();
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
+    }
+
 
     // 토큰에서 사용자 이름 추출
     public String getUsernameFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    // 토큰 유효성 검증
-    public boolean validateToken(String token, String username) {
-        return (username.equals(getUsernameFromToken(token)) && !isTokenExpired(token));
+    // Access Token과 Refresh Token을 둘 다 검증하는 메서드
+    public boolean validateToken(String token, Authentication authentication) {
+        String username = getUsernameFromToken(token);
+        return (username.equals(authentication.getName()) && !isTokenExpired(token));
     }
 
     // isTokenExpired, getExpirationDateFromToken만 private으로 정의한 이유
@@ -50,10 +71,9 @@ public class JwtTokenUtil {
     // 토큰 만료 시간 추출
     private Date getExpirationDateFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getExpiration();
     }
-
 }

@@ -1,19 +1,34 @@
 package com.example.scrap_chef.service;
 
 
+import com.example.scrap_chef.domain.user.LoginRequestDto;
+import com.example.scrap_chef.domain.user.TokenResponseDto;
 import com.example.scrap_chef.domain.user.User;
 import com.example.scrap_chef.repository.UserRepository;
+import com.example.scrap_chef.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
+
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final AuthenticationManager authenticationManager;
+//    private final JwtTokenUtil jwtTokenUtil;
+
 
     public User registerUser(String username, String email, String password) {
         // 비밀번호 암호화
@@ -28,4 +43,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public TokenResponseDto login(LoginRequestDto loginRequestDto) {
+        // 사용자 인증
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
+        );
+
+
+        // JWT 토큰 생성
+//        String accessToken = jwtTokenUtil.generateAccessToken(authentication);
+//        String refreshToken = jwtTokenUtil.generateRefreshToken(authentication);
+
+        TokenResponseDto tokenResponse = new TokenResponseDto();
+        tokenResponse.setAccessToken("");
+        tokenResponse.setRefreshToken("");
+        return tokenResponse;
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // 사용자 조회
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        // User를 UserDetails로 변환하여 반환
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .roles("USER")  // 예시로 USER 역할을 부여
+                .build();
+    }
 }
