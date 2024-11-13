@@ -25,10 +25,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private final AuthenticationManager authenticationManager;
-//    private final JwtTokenUtil jwtTokenUtil;
-
 
     public User registerUser(String username, String email, String password) {
         // 비밀번호 암호화
@@ -41,23 +37,6 @@ public class UserService implements UserDetailsService {
 
         // 데이터베이스에 저장
         return userRepository.save(user);
-    }
-
-    public TokenResponseDto login(LoginRequestDto loginRequestDto) {
-        // 사용자 인증
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
-        );
-
-
-        // JWT 토큰 생성
-//        String accessToken = jwtTokenUtil.generateAccessToken(authentication);
-//        String refreshToken = jwtTokenUtil.generateRefreshToken(authentication);
-
-        TokenResponseDto tokenResponse = new TokenResponseDto();
-        tokenResponse.setAccessToken("");
-        tokenResponse.setRefreshToken("");
-        return tokenResponse;
     }
 
 

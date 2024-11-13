@@ -11,7 +11,8 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-    private String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+    //    private String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
+    private String SECRET_KEY = "591DF9176D24FABE8E9CB1B37334EA";
     private final long ACCESS_TOKEN_EXPIRATION_TIME = 86400000L; // 1일 (24시간)
     private final long REFRESH_TOKEN_EXPIRATION_TIME = 2592000000L; // 30일 (30일)
 
