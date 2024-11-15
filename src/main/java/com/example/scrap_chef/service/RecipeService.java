@@ -38,7 +38,7 @@ public class RecipeService {
         int endIndex = (page) * pageSize;
 
         String uri = buildUri(ingredients, startIndex, endIndex);
-        System.out.println(uri);
+
         return webClient.get()
                 .uri(uri)
                 .retrieve()

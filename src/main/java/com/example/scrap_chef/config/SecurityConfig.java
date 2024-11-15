@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/auth/register", "/auth/login", "/recipes").permitAll()
+                                .requestMatchers(ApiConstants.WHITELISTED_PATHS).permitAll()
                                 .requestMatchers("/error").permitAll()
                                 .anyRequest().authenticated()
                 );

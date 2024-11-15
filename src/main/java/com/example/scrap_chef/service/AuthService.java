@@ -19,10 +19,10 @@ public class AuthService {
     public TokenResponseDto signIn(LoginRequestDto loginRequestDto) {
         // 사용자 인증
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
         );
 
-
+        System.out.println(authentication);
         // JWT 토큰 생성
 //        String accessToken = jwtTokenUtil.generateAccessToken(authentication);
 //        String refreshToken = jwtTokenUtil.generateRefreshToken(authentication);
