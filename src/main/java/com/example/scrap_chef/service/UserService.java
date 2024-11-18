@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public User registerUser(String username, String email, String password) {
+    public User signupUser(String username, String password) {
         // 비밀번호 암호화
         String encryptedPassword = passwordEncoder.encode(password);
 
