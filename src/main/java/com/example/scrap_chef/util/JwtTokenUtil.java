@@ -1,80 +1,81 @@
 package com.example.scrap_chef.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.core.Authentication;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+
+import io.jsonwebtoken.security.Keys;
 
 import java.util.Date;
 
+
+@Slf4j
 @Component
 public class JwtTokenUtil {
 
-    //    private String SECRET_KEY = System.getenv("JWT_SECRET_KEY");
-    private String SECRET_KEY = "591DF9176D24FABE8E9CB1B37334EA";
-    private final long ACCESS_TOKEN_EXPIRATION_TIME = 86400000L; // 1일 (24시간)
-    private final long REFRESH_TOKEN_EXPIRATION_TIME = 2592000000L; // 30일 (30일)
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // Access Token 생성
-    public String generateAccessToken(Authentication authentication) {
-        String username = authentication.getName();
-        Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION_TIME);
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpiration;
 
+    @Value("${jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
+
+    private SecretKey getSignInKey() { // JWT 서명을 위해 SecretKey 객체 생성
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
+
+    /**
+     * 엑세스 토큰을 생성합니다.
+     */
+    public String generateAccessToken(String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .subject(username) // payload
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(getSignInKey())
                 .compact();
     }
 
-    // Refresh Token 생성
-    public String generateRefreshToken(Authentication authentication) {
-        String username = authentication.getName();
-        Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION_TIME);
-
+    /**
+     * 리프레시 토큰을 생성합니다.
+     */
+    public String generateRefreshToken(String username) {
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(now)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+                .signWith(getSignInKey())
                 .compact();
     }
 
-
-    // 토큰에서 사용자 이름 추출
-    public String getUsernameFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+    /**
+     * JWT에서 클레임을 추출합니다.
+     */
+    public Claims extractAllClaims(String token) {
+        return (Jwts.parser()
+                .verifyWith(getSignInKey())
+                .build())
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    // Access Token과 Refresh Token을 둘 다 검증하는 메서드
-    public boolean validateToken(String token, Authentication authentication) {
-        String username = getUsernameFromToken(token);
-        return (username.equals(authentication.getName()) && !isTokenExpired(token));
-    }
-
-    // isTokenExpired, getExpirationDateFromToken만 private으로 정의한 이유
-    // 두 메서드는 토큰 유효성 검증 로직 내부에서만 사용되기 때문
-    // 캡슐화를 구현
-
-    // 토큰 만료 여부 확인
-    private boolean isTokenExpired(String token) {
-        return getExpirationDateFromToken(token).before(new Date());
-    }
-
-    // 토큰 만료 시간 추출
-    private Date getExpirationDateFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getExpiration();
+    /**
+     * JWT 토큰을 검증합니다.
+     */
+    public boolean isTokenValid(String token) {
+        try {
+            Claims claims = extractAllClaims(token);
+            Date expiration = claims.getExpiration();
+            return !expiration.before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }

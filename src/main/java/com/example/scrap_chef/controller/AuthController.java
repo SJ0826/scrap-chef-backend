@@ -1,8 +1,6 @@
 package com.example.scrap_chef.controller;
 
-import com.example.scrap_chef.data.auth.CheckDuplicateUserInDto;
-import com.example.scrap_chef.data.auth.CheckDuplicateUserOutDto;
-import com.example.scrap_chef.data.auth.SignupInDto;
+import com.example.scrap_chef.data.auth.*;
 import com.example.scrap_chef.util.ApiResponse;
 import com.example.scrap_chef.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +30,15 @@ public class AuthController {
         return success();
     }
 
+    @Operation(summary = "로그인")
+    @PostMapping("/signin")
+    public ResponseEntity<ApiResponse<SignInOutDto>> signInUser(@Valid @RequestBody SignInInDto signInInDto) {
+        return success(authService.signInUser(signInInDto));
+    }
+
     @Operation(summary = "아이디 중복 체크")
     @PostMapping("/duplicate-check")
-    public ResponseEntity<ApiResponse<CheckDuplicateUserOutDto>> checkUserDuplicate(@RequestBody CheckDuplicateUserInDto checkDuplicateUserInDto) {
+    public ResponseEntity<ApiResponse<Object>> checkUserDuplicate(@RequestBody CheckDuplicateUserInDto checkDuplicateUserInDto) {
 
         return success(authService.isUserLoginIdDuplicate(checkDuplicateUserInDto.getLoginId()), null);
     }
