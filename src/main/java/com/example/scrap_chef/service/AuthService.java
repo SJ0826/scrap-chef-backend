@@ -1,44 +1,54 @@
 package com.example.scrap_chef.service;
 
+import com.example.scrap_chef.code.error.AuthError;
+import com.example.scrap_chef.data.auth.CheckDuplicateUserOutDto;
 import com.example.scrap_chef.data.auth.SignupInDto;
-import com.example.scrap_chef.domain.user.LoginRequestDto;
-import com.example.scrap_chef.domain.user.TokenResponseDto;
 import com.example.scrap_chef.domain.user.User;
+import com.example.scrap_chef.exception.BadRequestException;
 import com.example.scrap_chef.repository.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.logging.Logger;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    // Service & Util
-    private final PasswordEncoder passwordEncoder;
-
     // repository
     private final UserRepository userRepository;
 
-
+    /**
+     * 사용자 회원가입
+     */
     public void signupUser(SignupInDto signupInDto) {
-
-        // 비밀번호를 암호화합니다.
-        String encryptedPassword = passwordEncoder.encode(signupInDto.getPassword());
+        log.info(signupInDto.getLoginId());
+        // 아이디 중복을 체크합니다.
+        if (userRepository.existsByLoginId(signupInDto.getLoginId())) {
+            throw new BadRequestException(AuthError.ALREADY_ENROLL_ID);
+        }
 
         // User 객체를 생성해 데이터베이스에 저장합니다.
         User user = new User();
-        user.setUsername(signupInDto.getUsername());
-        user.setPassword(encryptedPassword);
+        user.setLoginId(signupInDto.getLoginId());
+        user.setPassword(signupInDto.getPassword());
 
         // 데이터베이스에 저장
         userRepository.save(user);
     }
+
+    /**
+     * 유저 계정의 로그안 아이디 중복을 체크합니다.
+     */
+    public String isUserLoginIdDuplicate(String loginId) {
+        boolean isDuplicate = userRepository.existsByLoginId(loginId);
+        System.out.println(loginId);
+        return isDuplicate ? "이미 사용중인 아이디입니다" : "사용 가능합니다";
+    }
+
 
 //    public TokenResponseDto signIn(LoginRequestDto loginRequestDto) {
 //        // 사용자 인증

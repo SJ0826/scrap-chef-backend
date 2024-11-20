@@ -1,4 +1,4 @@
-package com.example.scrap_chef.dto;
+package com.example.scrap_chef.util;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

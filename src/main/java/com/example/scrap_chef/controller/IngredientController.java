@@ -1,16 +1,9 @@
 package com.example.scrap_chef.controller;
 
-import com.example.scrap_chef.domain.ingredient.Ingredient;
-import com.example.scrap_chef.domain.ingredient.IngredientUpdateDto;
-import com.example.scrap_chef.dto.ApiResponse;
 import com.example.scrap_chef.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 // TODO: 에러메세지는 컨트롤러에서 관리할까 서비스에서 관리할까

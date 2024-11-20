@@ -27,14 +27,14 @@ public class UserService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
         // 이름을 이용해서 유저를 조회합니다.
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        User user = userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + loginId));
 
         // User를 UserDetails로 변환하여 반환
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
+                .withUsername(user.getLoginId())
                 .password(user.getPassword())
                 .roles("USER")  // 예시로 USER 역할을 부여
                 .build();

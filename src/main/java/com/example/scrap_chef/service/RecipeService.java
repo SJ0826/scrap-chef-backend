@@ -1,20 +1,10 @@
 package com.example.scrap_chef.service;
 
-import com.example.scrap_chef.domain.recipe.RecipeDto;
-import com.example.scrap_chef.domain.recipe.RecipeOpenApiDto;
-import com.example.scrap_chef.domain.recipe.RecipeOpenApiResponseDto;
-import com.example.scrap_chef.domain.recipe.RecipeResponseDto;
-import com.example.scrap_chef.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
-
-import java.lang.reflect.Field;
-import java.util.*;
 
 
 @Slf4j

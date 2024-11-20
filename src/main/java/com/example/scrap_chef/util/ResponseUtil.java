@@ -1,6 +1,5 @@
 package com.example.scrap_chef.util;
 
-import com.example.scrap_chef.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -8,6 +7,11 @@ public class ResponseUtil {
 
     public static <T> ResponseEntity<ApiResponse<T>> success(T data) {
         ApiResponse<T> response = new ApiResponse<>(0, "success", data);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public static <T> ResponseEntity<ApiResponse<T>> success(String message, T data) {
+        ApiResponse<T> response = new ApiResponse<>(0, message, data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

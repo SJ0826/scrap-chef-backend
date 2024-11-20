@@ -1,20 +1,16 @@
 package com.example.scrap_chef.controller;
 
+import com.example.scrap_chef.data.auth.CheckDuplicateUserInDto;
+import com.example.scrap_chef.data.auth.CheckDuplicateUserOutDto;
 import com.example.scrap_chef.data.auth.SignupInDto;
-import com.example.scrap_chef.domain.user.LoginRequestDto;
-import com.example.scrap_chef.domain.user.TokenResponseDto;
-import com.example.scrap_chef.dto.ApiResponse;
+import com.example.scrap_chef.util.ApiResponse;
 import com.example.scrap_chef.service.AuthService;
-import com.example.scrap_chef.service.UserService;
-import com.example.scrap_chef.util.JwtTokenUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import static com.example.scrap_chef.util.ResponseUtil.success;
@@ -28,10 +24,6 @@ public class AuthController {
 
     // Service & Util
     private final AuthService authService;
-    private final JwtTokenUtil jwtTokenUtil;
-
-    // Repository
-    private final UserDetailsService userDetailsService;
 
     @Operation(summary = "회원가입")
     @PostMapping("/signup")
@@ -39,6 +31,14 @@ public class AuthController {
         authService.signupUser(signupInDto);
         return success();
     }
+
+    @Operation(summary = "아이디 중복 체크")
+    @PostMapping("/duplicate-check")
+    public ResponseEntity<ApiResponse<CheckDuplicateUserOutDto>> checkUserDuplicate(@RequestBody CheckDuplicateUserInDto checkDuplicateUserInDto) {
+
+        return success(authService.isUserLoginIdDuplicate(checkDuplicateUserInDto.getLoginId()), null);
+    }
+
 
 //    @PostMapping("/sign-in")
 //    public ResponseEntity<ApiResponse<TokenResponseDto>> signIn(@RequestBody LoginRequestDto request) {

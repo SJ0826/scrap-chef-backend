@@ -13,7 +13,7 @@ public class SignupInDto {
 
     @Schema(description = "이름", example = "홍길동")
     @NotBlank
-    private String username;
+    private String loginId;
 
     @Schema(description = "비밀번호", example = "qwer1234!")
     @NotBlank
