@@ -1,23 +1,31 @@
 package com.example.scrap_chef.service;
 
 import com.example.scrap_chef.code.error.AuthError;
+import com.example.scrap_chef.code.error.CommonError;
+import com.example.scrap_chef.code.error.ErrorCode;
 import com.example.scrap_chef.code.error.UserError;
+import com.example.scrap_chef.data.auth.ReissueTokenOutDto;
 import com.example.scrap_chef.data.auth.SignInInDto;
 import com.example.scrap_chef.data.auth.SignInOutDto;
 import com.example.scrap_chef.data.auth.SignupInDto;
 import com.example.scrap_chef.domain.user.User;
 import com.example.scrap_chef.exception.BadRequestException;
+import com.example.scrap_chef.exception.UnauthorizedException;
 import com.example.scrap_chef.repository.UserRepository;
 import com.example.scrap_chef.util.ApiResponse;
 import com.example.scrap_chef.util.JwtTokenUtil;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 
 @Slf4j
@@ -57,7 +65,7 @@ public class AuthService {
         return SignInOutDto
                 .builder()
                 .accessToken(jwtTokenUtil.generateAccessToken(user.getLoginId()))
-                .refreshToken(jwtTokenUtil.generateRefreshToken(user.getLoginId()))
+                .refreshToken(jwtTokenUtil.generateRefreshToken())
                 .build();
     }
 
@@ -71,20 +79,23 @@ public class AuthService {
     }
 
 
-//    public TokenResponseDto signIn(LoginRequestDto loginRequestDto) {
-//        // 사용자 인증
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword())
-//        );
-//
-//        System.out.println(authentication);
-//        // JWT 토큰 생성
-////        String accessToken = jwtTokenUtil.generateAccessToken(authentication);
-////        String refreshToken = jwtTokenUtil.generateRefreshToken(authentication);
-//
-//        TokenResponseDto tokenResponse = new TokenResponseDto();
-//        tokenResponse.setAccessToken("");
-//        tokenResponse.setRefreshToken("");
-//        return tokenResponse;
-//    }
+    /**
+     * 토큰을 재발급 합니다.
+     */
+    public ReissueTokenOutDto reissueToken(String token) {
+        // 토큰 유효성 체크
+        if (!jwtTokenUtil.isTokenValid(token)) {
+            throw new UnauthorizedException(CommonError.UNAUTHORIZED);
+        }
+        log.info(jwtTokenUtil.extractAllClaims(token).getSubject());
+        String accessToken = jwtTokenUtil.generateAccessToken(jwtTokenUtil.extractAllClaims(token).getSubject());
+        String refreshToken = jwtTokenUtil.generateRefreshToken();
+
+
+        return ReissueTokenOutDto
+                .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 }

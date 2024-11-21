@@ -12,6 +12,7 @@ import javax.crypto.SecretKey;
 import io.jsonwebtoken.security.Keys;
 
 import java.util.Date;
+import java.util.function.Function;
 
 
 @Slf4j
@@ -46,9 +47,8 @@ public class JwtTokenUtil {
     /**
      * 리프레시 토큰을 생성합니다.
      */
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken() {
         return Jwts.builder()
-                .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
                 .signWith(getSignInKey())
@@ -65,6 +65,12 @@ public class JwtTokenUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
 
     /**
      * JWT 토큰을 검증합니다.
