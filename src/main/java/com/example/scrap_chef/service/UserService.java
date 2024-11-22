@@ -1,21 +1,13 @@
 package com.example.scrap_chef.service;
 
 
-import com.example.scrap_chef.domain.user.LoginRequestDto;
-import com.example.scrap_chef.domain.user.TokenResponseDto;
-import com.example.scrap_chef.domain.user.User;
+import com.example.scrap_chef.entity.User;
 import com.example.scrap_chef.repository.UserRepository;
-import com.example.scrap_chef.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.authentication.AuthenticationManager;
 
 
 @Service

@@ -71,6 +71,10 @@ public class JwtTokenUtil {
         return claimsResolver.apply(claims);
     }
 
+    public String extractSubject(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
 
     /**
      * JWT 토큰을 검증합니다.

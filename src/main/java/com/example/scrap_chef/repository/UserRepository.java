@@ -1,6 +1,6 @@
 package com.example.scrap_chef.repository;
 
-import com.example.scrap_chef.domain.user.User;
+import com.example.scrap_chef.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
