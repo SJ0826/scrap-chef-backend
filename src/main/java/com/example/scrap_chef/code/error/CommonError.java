@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CommonError implements ErrorCode {
-    UNAUTHORIZED(9, "Unauthorized"),
+    UNAUTHORIZED(9, "인증에 실패했습니다"),
     ENCRYPT_FAIL(10, "암호화에 실패했습니다");
 
 
