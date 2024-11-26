@@ -1,7 +1,8 @@
 package com.example.scrap_chef.service;
 
-import com.example.scrap_chef.domain.ingredient.Ingredient;
-import com.example.scrap_chef.domain.ingredient.IngredientUpdateDto;
+import com.example.scrap_chef.data.ingredient.GetIngredientsOutDto;
+import com.example.scrap_chef.entity.Ingredient;
+import com.example.scrap_chef.data.ingredient.IngredientUpdateDto;
 import com.example.scrap_chef.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -18,8 +20,10 @@ public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
 
-    public List<Ingredient> getIngredients() {
-        return ingredientRepository.findAll();
+    public GetIngredientsOutDto getIngredients() {
+        List<Ingredient> ingredients = ingredientRepository.findAll();
+
+        return new GetIngredientsOutDto(ingredients);
     }
 
     @Transactional // 작업을 모두 성공하거나, 모두 실패하도록 보장
@@ -31,22 +35,21 @@ public class IngredientService {
 
         Ingredient newIngredient = Ingredient.builder()
                 .title(title)
-                .createdAt(LocalDateTime.now())
                 .build();
         ingredientRepository.save(newIngredient);
 
         return newIngredient;
     }
-
-    @Transactional
-    public Ingredient updateIngredient(Long id, IngredientUpdateDto ingredientUpdateDto) {
-        Ingredient targetIngredient = ingredientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
-
-        targetIngredient.setTitle(ingredientUpdateDto.getTitle());
-        ingredientRepository.save(targetIngredient);
-
-        return targetIngredient;
-    }
+//
+//    @Transactional
+//    public Ingredient updateIngredient(Long id, IngredientUpdateDto ingredientUpdateDto) {
+//        Ingredient targetIngredient = ingredientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
+//
+//        targetIngredient.setTitle(ingredientUpdateDto.getTitle());
+//        ingredientRepository.save(targetIngredient);
+//
+//        return targetIngredient;
+//    }
 
     @Transactional
     public void deleteIngredient(Long id) {

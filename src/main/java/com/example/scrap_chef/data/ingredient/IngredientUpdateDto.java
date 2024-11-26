@@ -1,4 +1,4 @@
-package com.example.scrap_chef.domain.ingredient;
+package com.example.scrap_chef.data.ingredient;
 
 import lombok.Getter;
 import lombok.Setter;

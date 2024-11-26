@@ -1,20 +1,36 @@
 package com.example.scrap_chef.controller;
 
+import com.example.scrap_chef.data.ingredient.GetIngredientsOutDto;
+import com.example.scrap_chef.entity.Ingredient;
 import com.example.scrap_chef.service.IngredientService;
+import com.example.scrap_chef.util.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
-// TODO: 에러메세지는 컨트롤러에서 관리할까 서비스에서 관리할까
+import static com.example.scrap_chef.util.ResponseUtil.success;
+
 
 @Slf4j
+@Tag(name = "재료")
 @RestController
+@RequestMapping("/v1/ingredient")
 @RequiredArgsConstructor
-@RequestMapping("/ingredients")
 public class IngredientController {
 
     private final IngredientService ingredientService;
+
+
+    @Operation(summary = "전체 재료 조회")
+    @GetMapping
+    public ResponseEntity<ApiResponse<GetIngredientsOutDto>> getIngredients() {
+        return success(ingredientService.getIngredients());
+    }
 
 //    // 전체 재료 조회
 //    @GetMapping
