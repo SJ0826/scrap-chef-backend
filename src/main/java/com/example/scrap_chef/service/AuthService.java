@@ -131,7 +131,6 @@ public class AuthService {
 
         String accessToken = jwtTokenUtil.generateAccessToken(jwtTokenUtil.extractAllClaims(token).getSubject());
         String refreshToken = jwtTokenUtil.generateRefreshToken();
-        log.info(refreshToken);
 
         Date expiredDate = jwtTokenUtil.extractClaim(token, Claims::getExpiration);
         LocalDateTime expiredAt = LocalDateTime.ofInstant(expiredDate.toInstant(), ZoneId.systemDefault());

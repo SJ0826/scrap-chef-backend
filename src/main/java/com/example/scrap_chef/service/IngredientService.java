@@ -1,5 +1,6 @@
 package com.example.scrap_chef.service;
 
+import com.example.scrap_chef.data.ingredient.CreateIngredientInDto;
 import com.example.scrap_chef.data.ingredient.GetIngredientsOutDto;
 import com.example.scrap_chef.entity.Ingredient;
 import com.example.scrap_chef.data.ingredient.IngredientUpdateDto;
@@ -20,14 +21,21 @@ public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
 
+    /**
+     * 전체 재료를 조회합니다.
+     */
     public GetIngredientsOutDto getIngredients() {
         List<Ingredient> ingredients = ingredientRepository.findAll();
 
         return new GetIngredientsOutDto(ingredients);
     }
 
-    @Transactional // 작업을 모두 성공하거나, 모두 실패하도록 보장
-    public Ingredient createIngredient(String title) {
+    /**
+     * 재료를 생성합니다.
+     */
+    @Transactional
+    public Ingredient createIngredient(CreateIngredientInDto createIngredientInDto) {
+        String title = createIngredientInDto.getTitle();
         boolean isDuplicate = ingredientRepository.existsByTitle(title);
         if (isDuplicate) {
             throw new IllegalArgumentException("중복된 재료입니다.");
@@ -40,7 +48,20 @@ public class IngredientService {
 
         return newIngredient;
     }
-//
+
+    /**
+     * 재료를 삭제합니다.
+     */
+    @Transactional
+    public Object deleteIngredient(Long id) {
+        log.info(String.valueOf(id));
+        Ingredient ingredient = ingredientRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
+        ingredientRepository.delete(ingredient);
+        return null;
+    }
+}
+
 //    @Transactional
 //    public Ingredient updateIngredient(Long id, IngredientUpdateDto ingredientUpdateDto) {
 //        Ingredient targetIngredient = ingredientRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
@@ -50,11 +71,3 @@ public class IngredientService {
 //
 //        return targetIngredient;
 //    }
-
-    @Transactional
-    public void deleteIngredient(Long id) {
-        Ingredient ingredient = ingredientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 재료입니다."));
-        ingredientRepository.delete(ingredient);
-    }
-}

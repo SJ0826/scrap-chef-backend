@@ -16,7 +16,7 @@ import java.util.List;
 public class GetIngredientsOutDto {
 
     @Schema(
-            description = "재료 이름",
+            description = "재료 목록",
             example = "[{ \"id\": 1, \"title\": \"Salt\", \"createdAt\": \"2024-11-26T12:48:32.537Z\", \"updatedAt\": \"2024-11-26T12:48:32.537Z\" }]"
     )
 
