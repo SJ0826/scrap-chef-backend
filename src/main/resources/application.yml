@@ -25,3 +25,9 @@ spring:
       tags-sorter: alpha
       path: /docs
       disable-swagger-default-url: true
+jwt:
+  secret: 591DF9176D24FABE8E9CB1B37334EA591DF9176D24FABE8E9CB1B37334EA
+  access-token-expiration: 180000
+  refresh-token-expiration: 600000
+
+
